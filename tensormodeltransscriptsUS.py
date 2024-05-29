@@ -31,13 +31,20 @@ tokenizer.add_special_tokens(special_tokens_dict)
 
 # Define a custom dataset class
 os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
-laborsurnames = ["MASON", 'TOOHEY', 'GAUDRON', 'McHUGH', 'GUMMOW', 'KIRBY', 'FRENCH', 'BELL', 'GAGELER',
-                 'KEANE', 'JAGOT', 'BEECH-JONES','RICH','McTIERNAN','WEBB','JACOBS','MURPHY']
-lnpsurnames = ["BRENNAN", "DEANE", 'DAWSON', 'HAYNE', 'CALLINAN', 'M_GLEESON', 'J_GLEESON', 'HEYDON',
-               'CRENNAN', 'KIEFEL', 'NETTLE', 'GORDON', 'EDELMAN', 'STEWARD','STARKE','DIXON','LATHAM',
-               'WILLAMS', 'FULLAGAR', 'KITTO', 'TAYLOR', 'MENZIES', 'WINDEYER', 'OWEN', 'BARWICK', 'WALSH',
-               'GIBBS', 'STEPHEN','AICKIN','WILSON']
-surnames = lnpsurnames + laborsurnames
+map_justice_to_party = {
+    'j__sonia_sotomayor': 'D', 'j__elena_kagan': 'D', 'j__john_g_roberts_jr': 'R',
+    'j__neil_gorsuch': 'R', 'j__clarence_thomas': 'R', 'j__antonin_scalia': 'R',
+    'j__brett_m_kavanaugh': 'R', 'j__earl_warren': 'R', 'j__charles_e_whittaker': 'R',
+    'j__lewis_f_powell_jr': 'R', 'j__harold_burton': 'D', 'j__sherman_minton': 'D',
+    'j__abe_fortas': 'D', 'j__hugo_l_black': 'D', 'j__potter_stewart': 'R',
+    'j__warren_e_burger': 'R', 'j__harry_a_blackmun': 'R', 'j__arthur_j_goldberg': 'D',
+    'j__samuel_a_alito_jr': 'R', 'j__john_m_harlan2': 'R', 'j__anthony_m_kennedy': 'R',
+    'j__ruth_bader_ginsburg': 'D', 'j__william_j_brennan_jr': 'R', 'j__john_m_harlan': 'R',
+    'j__david_h_souter': 'R', 'j__william_o_douglas': 'D', 'j__stephen_g_breyer': 'D',
+    'j__john_paul_stevens': 'R', 'j__thurgood_marshall': 'D', 'j__felix_frankfurter': 'D',
+    'j__william_h_rehnquist': 'R', 'j__byron_r_white': 'D', 'j__tom_c_clark': 'D',
+    'j__sandra_day_oconnor': 'R', 'j__stanley_reed': 'D'
+}
 class JudgmentDataset(Dataset):
     def __init__(self, input_ids, attention_masks, years, directions, transcript_numbers, judge_names,tokenizer):
         self.tokenizer = tokenizer
@@ -571,7 +578,7 @@ lower_errors.append(lower_overall)
 upper_errors.append(upper_overall)
 # Plot the bar chart with error bars
 fig, ax = plt.subplots(figsize=(12, 8))
-colors = ['red' if justice in laborsurnames else 'blue' for justice in justices]
+colors = ['red' if map_justice_to_party[justice] == 'R' else 'blue' for justice in justices]
 bars = ax.barh(justices, means, xerr=[lower_errors, upper_errors], capsize=5, color=colors)
 # Add labels and title
 ax.set_xlabel('Mean Liberal Probability')
