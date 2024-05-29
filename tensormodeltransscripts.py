@@ -212,10 +212,7 @@ test_f = []
 train_f_ci = []
 val_f_ci = []
 test_f_ci = []
-labels = np.array(directions_train)
-class_weights = compute_class_weight(class_weight='balanced', classes=np.unique(labels), y=labels)
-class_weights = torch.tensor(class_weights, dtype=torch.float).to(device)
-criterion = torch.nn.BCEWithLogitsLoss(pos_weight=class_weights[1])
+criterion = torch.nn.BCEWithLogitsLoss()
 # Lists to store test accuracies
 test_accuracies = []
 #model.load_state_dict(torch.load('best_model_USA.pth')) have the mode be based on a previous one
