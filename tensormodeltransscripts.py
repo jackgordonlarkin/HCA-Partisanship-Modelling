@@ -570,6 +570,9 @@ upper_errors.append(upper_overall)
 # Plot the bar chart with error bars
 fig, ax = plt.subplots(figsize=(12, 8))
 colors = ['red' if justice in laborsurnames else 'blue' for justice in justices]
+for i in range(len(justices)):
+    if justices[i] in trainnames:
+        justices[i] += "*"
 bars = ax.barh(justices, means, xerr=[lower_errors, upper_errors], capsize=5, color=colors)
 # Add labels and title
 ax.set_xlabel('Mean Liberal Probability')
