@@ -24,7 +24,7 @@ liberal_prob_justice_year_best = {}  # Stores probabilities by justice and year
 liberal_prob_overall_best = []  # Stores overall probabilities
 liberal_prob_justice_best = defaultdict(list)  # Stores probabilities by justice
 tokenizer = AutoTokenizer.from_pretrained('nlpaueb/legal-bert-small-uncased')  # Adjust the range as needed
-year_tokens = [f'[YEAR_{year}]' for year in range(1948, 2025)]
+year_tokens = [f'[YEAR_{year}]' for year in range(1900, 2025)]
 special_tokens_dict = {'additional_special_tokens': year_tokens}
 tokenizer.add_special_tokens(special_tokens_dict)
 
@@ -131,9 +131,11 @@ config = AutoConfig.from_pretrained(model_type)
 config.num_labels=1 #it's a binairy choice
 config.hidden_dropout_prob=dropout_prob # forget hidden layhers
 config.attention_probs_dropout_prob=dropout_prob # sometime signore attention masks
+
 # Load the model with the updated configuration
 model =  AutoModelForSequenceClassification.from_pretrained(model_type, config=config)
 print(model.config)
+model.resize_token_embeddings(len(tokenizer))
 
 
 #triued adding in freedom data
@@ -183,15 +185,17 @@ judge_names_val = [i[5] for i in val_data]
 year_val = [int(i[4]) for i in val_data]
 
 # Separate train and test data
+''''
 dataset = JudgmentDatasetNoYear(input_ids_train, attention_masks_train, year_train, directions_train, transcript_numbers_train, judge_names_train,tokenizer)
 test_dataset = JudgmentDatasetNoYear(input_ids_test, attention_masks_test, year_test, directions_test, transcript_numbers_test, judge_names_test,tokenizer)
 val_dataset = JudgmentDatasetNoYear(input_ids_val,attention_masks_val,year_val,directions_val,transcript_numbers_val,judge_names_val,tokenizer)
-#ConsiderYears
 '''
+#ConsiderYears
+
 dataset = JudgmentDataset(input_ids_train, attention_masks_train, year_train, directions_train, transcript_numbers_train, judge_names_train,tokenizer)
 test_dataset = JudgmentDataset(input_ids_test, attention_masks_test, year_test, directions_test, transcript_numbers_test, judge_names_test,tokenizer)
 val_dataset = JudgmentDataset(input_ids_val,attention_masks_val,year_val,directions_val,transcript_numbers_val,judge_names_val,tokenizer)
-'''
+
 # Create data loaders
 train_batch_size = 16
 val_batch_size = 64
@@ -226,7 +230,7 @@ criterion = torch.nn.BCEWithLogitsLoss()
 test_accuracies = []
 #model.load_state_dict(torch.load('best_model_USA.pth')) have the mode be based on a previous one
 # Directory to save the model checkpoints
-checkpoint_dir = "model_checkpoints_USA"
+checkpoint_dir = "model_checkpoints_USAYears"
 loadedlength = 0
 
 # Create the directory if it doesn't exist
@@ -578,7 +582,7 @@ lower_errors.append(lower_overall)
 upper_errors.append(upper_overall)
 # Plot the bar chart with error bars
 fig, ax = plt.subplots(figsize=(12, 8))
-colors = ['red' if map_justice_to_party[justice] == 'R' else 'blue' for justice in justices]
+colors = ['red' if map_justice_to_party.get(justice) == 'R' else 'blue' for justice in justices]
 for i in range(len(justices)):
     if justices[i] in trainnames:
         justices[i] += "*"

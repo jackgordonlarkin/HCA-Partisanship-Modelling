@@ -24,7 +24,7 @@ liberal_prob_justice_year_best = {}  # Stores probabilities by justice and year
 liberal_prob_overall_best = []  # Stores overall probabilities
 liberal_prob_justice_best = defaultdict(list)  # Stores probabilities by justice
 tokenizer = AutoTokenizer.from_pretrained('nlpaueb/legal-bert-small-uncased')  # Adjust the range as needed
-year_tokens = [f'[YEAR_{year}]' for year in range(1948, 2025)]
+year_tokens = [f'[YEAR_{year}]' for year in range(1900, 2025)]
 special_tokens_dict = {'additional_special_tokens': year_tokens}
 tokenizer.add_special_tokens(special_tokens_dict)
 
@@ -127,6 +127,7 @@ config.attention_probs_dropout_prob=dropout_prob # sometime signore attention ma
 # Load the model with the updated configuration
 model =  AutoModelForSequenceClassification.from_pretrained(model_type, config=config)
 print(model.config)
+model.resize_token_embeddings(len(tokenizer))
 
 # Load the data
 with open('transcript_datasliding.json', 'r') as f:
