@@ -175,15 +175,17 @@ judge_names_val = [i[5] for i in val_data]
 year_val = [int(i[4]) for i in val_data]
 
 # Separate train and test data
+'''
 dataset = JudgmentDatasetNoYear(input_ids_train, attention_masks_train, year_train, directions_train, transcript_numbers_train, judge_names_train,tokenizer)
 test_dataset = JudgmentDatasetNoYear(input_ids_test, attention_masks_test, year_test, directions_test, transcript_numbers_test, judge_names_test,tokenizer)
 val_dataset = JudgmentDatasetNoYear(input_ids_val,attention_masks_val,year_val,directions_val,transcript_numbers_val,judge_names_val,tokenizer)
-#ConsiderYears
 '''
+#ConsiderYears as time is important to consider ideological hot button issues and langauge shifts overtime although it's usefulness for forecasting could be intresting
+
 dataset = JudgmentDataset(input_ids_train, attention_masks_train, year_train, directions_train, transcript_numbers_train, judge_names_train,tokenizer)
 test_dataset = JudgmentDataset(input_ids_test, attention_masks_test, year_test, directions_test, transcript_numbers_test, judge_names_test,tokenizer)
 val_dataset = JudgmentDataset(input_ids_val,attention_masks_val,year_val,directions_val,transcript_numbers_val,judge_names_val,tokenizer)
-'''
+
 # Create data loaders
 train_batch_size = 16
 val_batch_size = 64

@@ -190,12 +190,11 @@ dataset = JudgmentDatasetNoYear(input_ids_train, attention_masks_train, year_tra
 test_dataset = JudgmentDatasetNoYear(input_ids_test, attention_masks_test, year_test, directions_test, transcript_numbers_test, judge_names_test,tokenizer)
 val_dataset = JudgmentDatasetNoYear(input_ids_val,attention_masks_val,year_val,directions_val,transcript_numbers_val,judge_names_val,tokenizer)
 
-#ConsiderYears this was chosen not to be done due to smaller time window of the australian dataset
-'''
+#ConsiderYears this is consdier 'language drift'
 dataset = JudgmentDataset(input_ids_train, attention_masks_train, year_train, directions_train, transcript_numbers_train, judge_names_train,tokenizer)
 test_dataset = JudgmentDataset(input_ids_test, attention_masks_test, year_test, directions_test, transcript_numbers_test, judge_names_test,tokenizer)
 val_dataset = JudgmentDataset(input_ids_val,attention_masks_val,year_val,directions_val,transcript_numbers_val,judge_names_val,tokenizer)
-'''
+
 # Create data loaders
 train_batch_size = 16
 val_batch_size = 64
